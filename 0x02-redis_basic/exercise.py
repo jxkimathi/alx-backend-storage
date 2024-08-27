@@ -1,7 +1,7 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Creating a redis cache class"""
 import redis
-from tping import Union
+from typing import Union
 import uuid
 
 
