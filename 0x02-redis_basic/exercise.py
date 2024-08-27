@@ -30,3 +30,11 @@ class Cache:
         if fn:
             return fn(value)
         return value
+
+    def get_str(self, key: str) -> Optional[str]:
+        """Get data from redis instance"""
+        return self.get(key, str)
+
+    def get_int(self, key: str) -> Optional[int]:
+        """Get data from redis instance as int"""
+        return self.get(key, int)
