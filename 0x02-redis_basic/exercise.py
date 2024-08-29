@@ -46,7 +46,8 @@ def replay(methos: Callable) -> None:
     print(f"{method_name} was called {len(inputs)} times:")
 
     for i, (input, output) in enumerate(zip(inputs, outputs)):
-        print(f"{method_name}(*{input.decode('utf-8')}) -> {output.decode('utf-8')}")
+        print(f"{method_name}(*{input.decode('utf-8')}) ->
+              {output.decode('utf-8')}")
 
 
 class Cache:
