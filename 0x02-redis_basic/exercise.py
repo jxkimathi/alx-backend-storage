@@ -36,18 +36,17 @@ def call_history(method: Callable) -> Callable:
 def replay(methos: Callable) -> None:
     """Displays the history of calls of a method"""
     redis_instance = redis.Redis()
-    method_name: str = methos.__qualname__
-    inputs_key: str = method_name + ":inputs"
-    outputs_key: str = method_name + ":outputs"
+    meth: str = methos.__qualname__
+    inputs_key: str = meth + ":inputs"
+    outputs_key: str = meth + ":outputs"
 
     inputs = redis_instance.lrange(inputs_key, 0, -1)
     outputs = redis_instance.lrange(outputs_key, 0, -1)
 
-    print(f"{method_name} was called {len(inputs)} times:")
+    print(f"{meth} was called {len(inputs)} times:")
 
-    for i, (input, output) in enumerate(zip(inputs, outputs)):
-        print(f"{method_name}(*{input.decode('utf-8')}) ->
-              {output.decode('utf-8')}")
+    for i, (input, out) in enumerate(zip(inputs, outputs)):
+        print(f"{meth}(*{input.decode('utf-8')}) -> {out.decode('utf-8')}")
 
 
 class Cache:
