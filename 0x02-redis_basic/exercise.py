@@ -17,6 +17,7 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return increment_calls
 
+
 def call_history(method: Callable) -> Callable:
     """Stores the history of inputs and outputs for a method"""
     @wraps(method)
@@ -31,22 +32,22 @@ def call_history(method: Callable) -> Callable:
         return output
     return store_history
 
+
 def replay(methos: Callable) -> None:
     """Displays the history of calls of a method"""
-    r = redis.Redis()
-    input_key: str = str(method.__qualname__) + ":inputs"
-    output_key: str = str(method.__qualname__) + ":outputs"
+    redis_instance = redis.Redis()
+    method_name: str = methos.__qualname__
+    inputs_key: str = method_name + ":inputs"
+    outputs_key: str = method_name + ":outputs"
 
-    number_of_calls: int = int(r.get(method.__qualname__))
-    print("{} was called {} times:".format(method.__qualname__,
-                                           str(number_of_calls)))
-    inputs: List = r.lrange(input_key, 0, -1)
-    outputs: List = r.lrange(output_key, 0, -1)
-    history: List = list(zip(inputs, outputs))
-    for pair in history:
-        print("{}(*{}) -> {}".format(method.__qualname__,
-                                     pair[0].decode("utf-8"),
-                                     pair[1].decode("utf-8")))
+    inputs = redis_instance.lrange(inputs_key, 0, -1)
+    outputs = redis_instance.lrange(outputs_key, 0, -1)
+
+    print(f"{method_name} was called {len(inputs)} times:")
+
+    for i, (input, output) in enumerate(zip(inputs, outputs)):
+        print(f"{method_name}(*{input.decode('utf-8')}) -> {output.decode('utf-8')}")
+
 
 class Cache:
     """Redis class that stores instance of the redis client"""
